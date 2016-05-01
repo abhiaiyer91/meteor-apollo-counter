@@ -1,8 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import Counts from '/imports/data/collection';
-const Users = Meteor.users;
-const Notes = new Mongo.Collection('notes');
 
 export default resolvers = {
   Query: {
