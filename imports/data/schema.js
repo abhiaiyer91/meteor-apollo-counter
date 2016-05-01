@@ -1,5 +1,3 @@
-import { Random } from 'meteor/random';
-
 export default schema = [`
 type Count {
   _id: String
