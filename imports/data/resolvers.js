@@ -5,7 +5,7 @@ import Counts from '/imports/data/collection';
 export default resolvers = {
   Query: {
     async counts() {
-      return Counts.findOne();
+      return Counts.findOne({}, {fields: {_id: 1, count: 1}});
     }
   },
   Mutation: {
