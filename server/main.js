@@ -11,7 +11,7 @@ const GRAPHQL_PORT = 4000;
 
 const graphQLServer = express();
 
-graphQLServer.use('/graphql', apolloServer(async (req) => {
+graphQLServer.use('/graphql', apolloServer(async () => {
   return {
     graphiql: true,
     pretty: true,
@@ -27,7 +27,7 @@ graphQLServer.listen(GRAPHQL_PORT, () => console.log(
 WebApp.rawConnectHandlers.use(proxyMiddleware(`http://localhost:${GRAPHQL_PORT}/graphql`));
 
 Meteor.startup(() => {
-  const count = Counts.findOne();
+  const count = Counts.findOne({}, {_id: 1});
   if (count) {
     return;
   }

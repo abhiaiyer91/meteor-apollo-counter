@@ -10,7 +10,6 @@ export default resolvers = {
       return Counts.findOne();
     }
   },
-  Count: {},
   Mutation: {
     async incrementCount(_, { id }) {
       return Counts.update({_id: id}, {

@@ -7,7 +7,7 @@ import { Accounts } from 'meteor/accounts-base';
 
 import AppWithData from '/imports/client/App';
 
-const client = new ApolloClient()
+const client = new ApolloClient();
 
 Meteor.startup(() => {
   render(<Provider client={client}>
