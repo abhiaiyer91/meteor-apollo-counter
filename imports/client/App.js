@@ -21,16 +21,12 @@ function generateMutationObject(id) {
 
 /**
  * handle mutation
- * @param id
- * @param mutate
- * @param refetch
+ * @param mutation - Promise from mutation
+ * @param refetch - refetch from prop
  * @returns {*}
  */
-function incrementMutation(id, mutate, refetch) {
-  const mutationObject = generateMutationObject(id);
-  return mutate({
-    ...mutationObject
-  }).then(() => {
+function dispatchIncrementMutation(id, mutation, refetch) {
+  return mutation(id).then(() => {
     if (refetch) {
       return refetch();
     }
@@ -38,13 +34,16 @@ function incrementMutation(id, mutate, refetch) {
 }
 
 
-function App({ data, mutate }) {
-  const countId = data && data.counts && data.counts._id;
+function App({ data, mutations }) {
   const count = data && data.counts && data.counts.count;
+  const countId = data && data.counts && data.counts._id;
+  const incrementMutation = mutations.increment;
+  console.log(incrementMutation);
+  const refetch = data && data.refetch;
   return (
     <div>
       <p>You have clicked this button {count} times.</p>
-      <button onClick={function () { return incrementMutation(countId, mutate, data && data.refetch);}}>
+      <button onClick={function () { return dispatchIncrementMutation(countId, incrementMutation, refetch);}}>
         Click Me
       </button>
     </div>
@@ -67,8 +66,14 @@ function mapQueriesToProps() {
   };
 }
 
+function mapMutationsToProps({ ownProps, state }) {
+  return {
+    increment: generateMutationObject
+  };
+}
+
 // This container brings in Apollo GraphQL data
-const AppWithData = connect({mapQueriesToProps})
+const AppWithData = connect({mapQueriesToProps, mapMutationsToProps})
 (App);
 
 export default AppWithData;
