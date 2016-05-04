@@ -9,7 +9,7 @@ import { Meteor } from 'meteor/meteor';
  */
 function generateMutationObject(id) {
   return {
-    mutation: `
+    mutation: gql`
     mutation createCount($id: String) {
      incrementCount(id: $id)
     }`,
@@ -38,7 +38,6 @@ function App({ data, mutations }) {
   const count = data && data.counts && data.counts.count;
   const countId = data && data.counts && data.counts._id;
   const incrementMutation = mutations.increment;
-  console.log(incrementMutation);
   const refetch = data && data.refetch;
   return (
     <div>
@@ -53,7 +52,7 @@ function App({ data, mutations }) {
 function mapQueriesToProps() {
   return {
     data: {
-      query: `
+      query: gql`
           {
             counts {
               _id
