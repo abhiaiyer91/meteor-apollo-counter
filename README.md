@@ -6,6 +6,8 @@ npm install
 meteor
 ```
 
+Wait for the app to start and find the GraphiQL UI at http://localhost:4000/graphql.
+
 Just a simple example incrementing a counter with Apollo and Meteor.
 
 ## Contribute
