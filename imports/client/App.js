@@ -19,30 +19,64 @@ function generateMutationObject(id) {
   };
 }
 
-/**
- * handle mutation
- * @param mutation - Promise from mutation
- * @param refetch - refetch from prop
- * @returns {*}
- */
-function dispatchIncrementMutation(id, mutation, refetch) {
-  return mutation(id).then(() => {
-    if (refetch) {
-      return refetch();
+function incrementCount(id, refetch) {
+  return (dispatch, getState, client) => {
+    client.mutate(generateMutationObject(id)).then((result) => {
+      if (result.data) {
+        dispatch({
+          type: "UPDATE_COUNT",
+          data: result.data.incrementCount
+        });
+        refetch();
+      }
+    });
+  };
+}
+
+function fetchCounts() {
+  return (dispatch, getState, client) => {
+    client.query({
+      query: gql`
+          {
+            counts {
+              _id
+              count
+            },
+          }
+        `,
+      forceFetch: true
+    }).then((result) => {
+      if (result) {
+        dispatch({
+          type: 'UPDATE_COUNT',
+          data: result.data.counts.count
+        });
+      }
+    });
+  };
+}
+
+function composeAppComponent(Component) {
+  return class extends React.Component {
+    componentWillMount() {
+      this.props.dispatch(fetchCounts());
     }
-  });
+    render() {
+      return <Component {...this.props} />
+    }
+  }
 }
 
 
-function App({ data, mutations }) {
+function App({ dispatch, data, reduxCount }) {
   const count = data && data.counts && data.counts.count;
   const countId = data && data.counts && data.counts._id;
-  const incrementMutation = mutations.increment;
   const refetch = data && data.refetch;
   return (
     <div>
-      <p>You have clicked this button {count} times.</p>
-      <button onClick={function () { return dispatchIncrementMutation(countId, incrementMutation, refetch);}}>
+      <p>The apollo store state for the count is {count}</p>
+      <p>The Redux store state for the count is {reduxCount}</p>
+      <button onClick={function () { return dispatch(incrementCount(countId, refetch));}}>
         Click Me
       </button>
     </div>
@@ -65,14 +99,14 @@ function mapQueriesToProps() {
   };
 }
 
-function mapMutationsToProps({ ownProps, state }) {
+function mapStateToProps(state) {
   return {
-    increment: generateMutationObject
+    reduxCount: state.count
   };
 }
 
 // This container brings in Apollo GraphQL data
-const AppWithData = connect({mapQueriesToProps, mapMutationsToProps})
-(App);
+const AppWithData = connect({mapQueriesToProps, mapStateToProps})
+(composeAppComponent(App));
 
 export default AppWithData;
