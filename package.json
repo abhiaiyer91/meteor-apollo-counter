@@ -5,7 +5,7 @@
     "start": "meteor run"
   },
   "dependencies": {
-    "apollo-client": "^0.3.0",
+    "apollo-client": "^0.3.20",
     "express": "^4.13.4",
     "graphql": "^0.5.0",
     "graphql-tools": "^0.3.13",
@@ -14,7 +14,8 @@
     "meteor-node-stubs": "~0.2.0",
     "react": "^15.0.2",
     "react-addons-pure-render-mixin": "^15.0.2",
-    "react-apollo": "^0.3.1",
-    "react-dom": "^15.0.2"
+    "react-apollo": "^0.3.10",
+    "react-dom": "^15.0.2",
+    "redux-thunk": "^2.1.0"
   }
 }
